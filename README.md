@@ -10,8 +10,8 @@
 
 Clone the project.
 ```bash
-git clone https://github.com/Nickil21/code-completion-underrepresented-task.git
-cd code-completion-underrepresented-task/
+git clone https://github.com/Nickil21/code-completion-jetbrains.git
+cd code-completion-jetbrains/
 ```
 
 Activate conda environment and install the necessary libraries.
