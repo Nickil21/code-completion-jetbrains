@@ -1,0 +1,1042 @@
+{
+    "dataset": "microsoft/codexglue_method_generation",
+    "config": "default",
+    "split": "test",
+    "features": [
+        {
+            "feature_idx": 0,
+            "name": "signature",
+            "type": {
+                "dtype": "string",
+                "_type": "Value"
+            }
+        },
+        {
+            "feature_idx": 1,
+            "name": "body",
+            "type": {
+                "dtype": "string",
+                "_type": "Value"
+            }
+        },
+        {
+            "feature_idx": 2,
+            "name": "docstring",
+            "type": {
+                "dtype": "string",
+                "_type": "Value"
+            }
+        },
+        {
+            "feature_idx": 3,
+            "name": "id",
+            "type": {
+                "dtype": "string",
+                "_type": "Value"
+            }
+        }
+    ],
+    "rows": [
+        {
+            "row_idx": 0,
+            "row": {
+                "signature": "def debug(user, message):",
+                "body": "message_user(user, message, constants.DEBUG)<EOL>",
+                "docstring": "Adds a message with the ``DEBUG`` level.\n\n:param user: User instance\n:param message: Message to show",
+                "id": "f4:m0"
+            },
+            "truncated_cells": []
+        },
+        {
+            "row_idx": 1,
+            "row": {
+                "signature": "def success(user, message):",
+                "body": "message_user(user, message, constants.SUCCESS)<EOL>",
+                "docstring": "Adds a message with the ``SUCCESS`` level.\n\n:param user: User instance\n:param message: Message to show",
+                "id": "f4:m2"
+            },
+            "truncated_cells": []
+        },
+        {
+            "row_idx": 2,
+            "row": {
+                "signature": "def process_response(self, request, response):",
+                "body": "if hasattr(request, \"<STR_LIT>\") and hasattr(request, \"<STR_LIT:user>\") and request.user.is_authenticated():<EOL><INDENT>msgs = get_messages(request.user)<EOL>if msgs:<EOL><INDENT>for msg, level in msgs:<EOL><INDENT>messages.add_message(request, level, msg)<EOL><DEDENT><DEDENT><DEDENT>return response<EOL>",
+                "docstring": "Check for messages for this user and, if it exists,\ncall the messages API with it",
+                "id": "f5:c0:m0"
+            },
+            "truncated_cells": []
+        },
+        {
+            "row_idx": 3,
+            "row": {
+                "signature": "def table(name, auth=None, eager=True):",
+                "body": "auth = auth or []<EOL>dynamodb = boto.connect_dynamodb(*auth)<EOL>table = dynamodb.get_table(name)<EOL>return Table(table=table, eager=eager)<EOL>",
+                "docstring": "Returns a given table for the given user.",
+                "id": "f8:m0"
+            },
+            "truncated_cells": []
+        },
+        {
+            "row_idx": 4,
+            "row": {
+                "signature": "def api_request(methods=None, require_token=True):",
+                "body": "def decorator(view_func):<EOL><INDENT>@wraps(view_func, assigned=available_attrs(view_func))<EOL>def _wrapped_view(request, *args, **kwargs):<EOL><INDENT>ApiToken = apps.get_model('<STR_LIT>', '<STR_LIT>')<EOL>m = methods if methods is not None else DEFAULT_API_METHODS<EOL>if request.method not in m:<EOL><INDENT>response = ApiResponse(False, '<STR_LIT>', status=<NUM_LIT>)<EOL>response['<STR_LIT>'] = '<STR_LIT:U+002CU+0020>'.join(methods)<EOL>return response<EOL><DEDENT>try:<EOL><INDENT>data = json.loads(request.body.decode('<STR_LIT:utf-8>')) if request.body else {}<EOL>if require_token:<EOL><INDENT>token_string = request.GET['<STR_LIT>'] if request.method == '<STR_LIT:GET>' else data['<STR_LIT>']<EOL>try:<EOL><INDENT>token = ApiToken.objects.get(token=token_string)<EOL>token.save()  <EOL>data['<STR_LIT>'] = token<EOL><DEDENT>except ApiToken.DoesNotExist:<EOL><INDENT>logger.exception('<STR_LIT>'.format(token_string))<EOL>return ApiResponse(False, '<STR_LIT>', status=<NUM_LIT>)<EOL><DEDENT><DEDENT>return ApiResponse(data=view_func(request, data=data, *args, **kwargs))<EOL><DEDENT>except Exception as e:<EOL><INDENT>if e.__class__.__name__ == '<STR_LIT>':<EOL><INDENT>logger.exception('<STR_LIT>')<EOL>return ApiResponse(False, '<STR_LIT>'.format(e), status=<NUM_LIT>)<EOL><DEDENT>else:<EOL><INDENT>logger.exception('<STR_LIT>')<EOL>return ApiResponse(False, '<STR_LIT>'.format(e), status=<NUM_LIT>)<EOL><DEDENT><DEDENT><DEDENT>return _wrapped_view<EOL><DEDENT>return decorator<EOL>",
+                "docstring": "View decorator that handles JSON based API requests and responses consistently.\n:param methods: A list of allowed methods\n:param require_token: Whether API token is checked automatically or not",
+                "id": "f21:m0"
+            },
+            "truncated_cells": []
+        },
+        {
+            "row_idx": 5,
+            "row": {
+                "signature": "def get_tweets(user, pages=<NUM_LIT>):",
+                "body": "url = f'<STR_LIT>'<EOL>headers = {<EOL>'<STR_LIT>': '<STR_LIT>',<EOL>'<STR_LIT>': f'<STR_LIT>',<EOL>'<STR_LIT>': '<STR_LIT>',<EOL>'<STR_LIT>': '<STR_LIT:yes>',<EOL>'<STR_LIT>': '<STR_LIT>',<EOL>'<STR_LIT>': '<STR_LIT>'<EOL>}<EOL>def gen_tweets(pages):<EOL><INDENT>r = session.get(url, headers=headers)<EOL>while pages > <NUM_LIT:0>:<EOL><INDENT>try:<EOL><INDENT>html = HTML(html=r.json()['<STR_LIT>'],<EOL>url='<STR_LIT>', default_encoding='<STR_LIT:utf-8>')<EOL><DEDENT>except KeyError:<EOL><INDENT>raise ValueError(<EOL>f'<STR_LIT>')<EOL><DEDENT>comma = \"<STR_LIT:U+002C>\"<EOL>dot = \"<STR_LIT:.>\"<EOL>tweets = []<EOL>for tweet in html.find('<STR_LIT>'):<EOL><INDENT>try:<EOL><INDENT>text = tweet.find('<STR_LIT>')[<NUM_LIT:0>].full_text<EOL><DEDENT>except IndexError:  <EOL><INDENT>continue<EOL><DEDENT>tweet_id = tweet.find('<STR_LIT>')[<NUM_LIT:0>].attrs['<STR_LIT>']<EOL>time = datetime.fromtimestamp(int(tweet.find('<STR_LIT>')[<NUM_LIT:0>].attrs['<STR_LIT>']) / <NUM_LIT>)<EOL>interactions = [<EOL>x.text<EOL>for x in tweet.find('<STR_LIT>')<EOL>]<EOL>replies = int(<EOL>interactions[<NUM_LIT:0>].split('<STR_LIT:U+0020>')[<NUM_LIT:0>].replace(comma, '<STR_LIT>').replace(dot, '<STR_LIT>')<EOL>or interactions[<NUM_LIT:3>]<EOL>)<EOL>retweets = int(<EOL>interactions[<NUM_LIT:1>].split('<STR_LIT:U+0020>')[<NUM_LIT:0>].replace(comma, '<STR_LIT>').replace(dot, '<STR_LIT>')<EOL>or interactions[<NUM_LIT:4>]<EOL>or interactions[<NUM_LIT:5>]<EOL>)<EOL>likes = int(<EOL>interactions[<NUM_LIT:2>].split('<STR_LIT:U+0020>')[<NUM_LIT:0>].replace(comma, '<STR_LIT>').replace(dot, '<STR_LIT>')<EOL>or interactions[<NUM_LIT:6>]<EOL>or interactions[<NUM_LIT:7>]<EOL>)<EOL>hashtags = [<EOL>hashtag_node.full_text<EOL>for hashtag_node in tweet.find('<STR_LIT>')<EOL>]<EOL>urls = [<EOL>url_node.attrs['<STR_LIT>']<EOL>for url_node in tweet.find('<STR_LIT>')<EOL>]<EOL>photos = [<EOL>photo_node.attrs['<STR_LIT>']<EOL>for photo_node in tweet.find('<STR_LIT>')<EOL>]<EOL>videos = []<EOL>video_nodes = tweet.find(\"<STR_LIT>\")<EOL>for node in video_nodes:<EOL><INDENT>styles = node.attrs['<STR_LIT>'].split()<EOL>for style in styles:<EOL><INDENT>if style.startswith('<STR_LIT>'):<EOL><INDENT>tmp = style.split('<STR_LIT:/>')[-<NUM_LIT:1>]<EOL>video_id = tmp[:tmp.index('<STR_LIT>')]<EOL>videos.append({'<STR_LIT:id>': video_id})<EOL><DEDENT><DEDENT><DEDENT>tweets.append({<EOL>'<STR_LIT>': tweet_id,<EOL>'<STR_LIT:time>': time,<EOL>'<STR_LIT:text>': text,<EOL>'<STR_LIT>': replies,<EOL>'<STR_LIT>': retweets,<EOL>'<STR_LIT>': likes,<EOL>'<STR_LIT>': {<EOL>'<STR_LIT>': hashtags, '<STR_LIT>': urls,<EOL>'<STR_LIT>': photos, '<STR_LIT>': videos<EOL>}<EOL>})<EOL><DEDENT>last_tweet = html.find('<STR_LIT>')[-<NUM_LIT:1>].attrs['<STR_LIT>']<EOL>for tweet in tweets:<EOL><INDENT>if tweet:<EOL><INDENT>tweet['<STR_LIT:text>'] = re.sub('<STR_LIT:http>', '<STR_LIT>', tweet['<STR_LIT:text>'], <NUM_LIT:1>)<EOL>yield tweet<EOL><DEDENT><DEDENT>r = session.get(url, params={'<STR_LIT>': last_tweet}, headers=headers)<EOL>pages += -<NUM_LIT:1><EOL><DEDENT><DEDENT>yield from gen_tweets(pages)<EOL>",
+                "docstring": "Gets tweets for a given user, via the Twitter frontend API.",
+                "id": "f32:m0"
+            },
+            "truncated_cells": []
+        },
+        {
+            "row_idx": 6,
+            "row": {
+                "signature": "def add_deformation(chn_names, data):",
+                "body": "if \"<STR_LIT>\" not in chn_names:<EOL><INDENT>for ii, ch in enumerate(chn_names):<EOL><INDENT>if ch == \"<STR_LIT>\":<EOL><INDENT>chn_names.append(\"<STR_LIT>\")<EOL>data.append(<NUM_LIT:1>-data[ii])<EOL><DEDENT><DEDENT><DEDENT>return chn_names, data<EOL>",
+                "docstring": "From circularity, compute the deformation\n\n    This method is useful for RT-DC data sets that contain\n    the circularity but not the deformation.",
+                "id": "f44:m1"
+            },
+            "truncated_cells": []
+        },
+        {
+            "row_idx": 7,
+            "row": {
+                "signature": "def get_leaves(self):",
+                "body": "return [n for n in self.walk() if n.is_leaf]<EOL>",
+                "docstring": "Get all the leaf nodes of the subtree descending from this node.\n\n:return: List of Nodes with no descendants.",
+                "id": "f55:c0:m14"
+            },
+            "truncated_cells": []
+        },
+        {
+            "row_idx": 8,
+            "row": {
+                "signature": "def get_node(self, label):",
+                "body": "for n in self.walk():<EOL><INDENT>if n.name == label:<EOL><INDENT>return n<EOL><DEDENT><DEDENT>",
+                "docstring": "Gets the specified node by name.\n\n:return: Node or None if name does not exist in tree",
+                "id": "f55:c0:m15"
+            },
+            "truncated_cells": []
+        },
+        {
+            "row_idx": 9,
+            "row": {
+                "signature": "def get_leaf_names(self):",
+                "body": "return [n.name for n in self.get_leaves()]<EOL>",
+                "docstring": "Get the names of all the leaf nodes of the subtree descending from\nthis node.\n\n:return: List of names of Nodes with no descendants.",
+                "id": "f55:c0:m16"
+            },
+            "truncated_cells": []
+        },
+        {
+            "row_idx": 10,
+            "row": {
+                "signature": "@classmethod<EOL><INDENT>def create(cls, name=None, length=None, descendants=None, **kw):<DEDENT>",
+                "body": "node = cls(name=name, length=length, **kw)<EOL>for descendant in descendants or []:<EOL><INDENT>node.add_descendant(descendant)<EOL><DEDENT>return node<EOL>",
+                "docstring": "Create a new `Node` object.\n\n:param name: Node label.\n:param length: Branch length from the new node to its parent.\n:param descendants: list of descendants or `None`.\n:param kw: Additonal keyword arguments are passed through to `Node.__init__`.\n:return: `Node` instance.",
+                "id": "f55:c0:m4"
+            },
+            "truncated_cells": []
+        },
+        {
+            "row_idx": 11,
+            "row": {
+                "signature": "@property<EOL><INDENT>def newick(self):<DEDENT>",
+                "body": "label = self.name or '<STR_LIT>'<EOL>if self._length:<EOL><INDENT>label += '<STR_LIT::>' + self._length<EOL><DEDENT>descendants = '<STR_LIT:U+002C>'.join([n.newick for n in self.descendants])<EOL>if descendants:<EOL><INDENT>descendants = '<STR_LIT:(>' + descendants + '<STR_LIT:)>'<EOL><DEDENT>return descendants + label<EOL>",
+                "docstring": "The representation of the Node in Newick format.",
+                "id": "f55:c0:m6"
+            },
+            "truncated_cells": []
+        },
+        {
+            "row_idx": 12,
+            "row": {
+                "signature": "def loads(s, strip_comments=False, **kw):",
+                "body": "kw['<STR_LIT>'] = strip_comments<EOL>return [parse_node(ss.strip(), **kw) for ss in s.split('<STR_LIT:;>') if ss.strip()]<EOL>",
+                "docstring": "Load a list of trees from a Newick formatted string.\n\n:param s: Newick formatted string.\n:param strip_comments: Flag signaling whether to strip comments enclosed in square \\\nbrackets.\n:param kw: Keyword arguments are passed through to `Node.create`.\n:return: List of Node objects.",
+                "id": "f55:m2"
+            },
+            "truncated_cells": []
+        },
+        {
+            "row_idx": 13,
+            "row": {
+                "signature": "def visit(self, visitor, predicate=None, **kw):",
+                "body": "predicate = predicate or bool<EOL>for n in self.walk(**kw):<EOL><INDENT>if predicate(n):<EOL><INDENT>visitor(n)<EOL><DEDENT><DEDENT>",
+                "docstring": "Apply a function to matching nodes in the (sub)tree rooted at self.\n\n:param visitor: A callable accepting a Node object as single argument..\n:param predicate: A callable accepting a Node object as single argument and \\\nreturning a boolean signaling whether Node matches; if `None` all nodes match.\n:param kw: Addtional keyword arguments are passed through to self.walk.",
+                "id": "f55:c0:m12"
+            },
+            "truncated_cells": []
+        },
+        {
+            "row_idx": 14,
+            "row": {
+                "signature": "def ascii_art(self, strict=False, show_internal=True):",
+                "body": "cmap = {<EOL>'<STR_LIT>': '<STR_LIT:->',<EOL>'<STR_LIT>': '<STR_LIT:|>',<EOL>'<STR_LIT>': '<STR_LIT:/>',<EOL>'<STR_LIT>': '<STR_LIT:\\\\>',<EOL>'<STR_LIT>': '<STR_LIT:|>',<EOL>'<STR_LIT>': '<STR_LIT:|>',<EOL>'<STR_LIT>': '<STR_LIT:+>',<EOL>}<EOL>def normalize(line):<EOL><INDENT>m = re.compile('<STR_LIT>')<EOL>line = m.sub(lambda m: m.group('<STR_LIT:s>')[<NUM_LIT:1>:], line)<EOL>line = re.sub('<STR_LIT>', '<STR_LIT>', line)  <EOL>line = re.sub('<STR_LIT>', '<STR_LIT>', line)  <EOL>line = re.sub('<STR_LIT>', '<STR_LIT>', line)  <EOL>if strict:<EOL><INDENT>for u, a in cmap.items():<EOL><INDENT>line = line.replace(u, a)<EOL><DEDENT><DEDENT>return line<EOL><DEDENT>return '<STR_LIT:\\n>'.join(<EOL>normalize(l) for l in self._ascii_art(show_internal=show_internal)[<NUM_LIT:0>]<EOL>if set(l) != {'<STR_LIT:U+0020>', '<STR_LIT>'})<EOL>",
+                "docstring": "Return a unicode string representing a tree in ASCII art fashion.\n\n:param strict: Use ASCII characters strictly (for the tree symbols).\n:param show_internal: Show labels of internal nodes.\n:return: unicode string\n\n>>> node = loads('((A,B)C,((D,E)F,G,H)I)J;')[0]\n>>> print(node.ascii_art(show_internal=False, strict=True))\n        /-A\n    /---|\n    |   \\-B\n----|       /-D\n    |   /---|\n    |   |   \\-E\n    \\---|\n        |-G\n        \\-H",
+                "id": "f55:c0:m8"
+            },
+            "truncated_cells": []
+        },
+        {
+            "row_idx": 15,
+            "row": {
+                "signature": "def close(self):",
+                "body": "pass<EOL>",
+                "docstring": "Close the socket.",
+                "id": "f58:c0:m4"
+            },
+            "truncated_cells": []
+        },
+        {
+            "row_idx": 16,
+            "row": {
+                "signature": "def settimeout(self, timeout):",
+                "body": "pass<EOL>",
+                "docstring": "Set a timeout.",
+                "id": "f58:c0:m3"
+            },
+            "truncated_cells": []
+        },
+        {
+            "row_idx": 17,
+            "row": {
+                "signature": "def recv(self, buffer_size):",
+                "body": "return self.msg[<NUM_LIT:0>:buffer_size]<EOL>",
+                "docstring": "Receive a message.",
+                "id": "f58:c0:m1"
+            },
+            "truncated_cells": []
+        },
+        {
+            "row_idx": 18,
+            "row": {
+                "signature": "async def read(self, buffer_size):",
+                "body": "return self.msg[<NUM_LIT:0>:buffer_size]<EOL>",
+                "docstring": "Read a message.",
+                "id": "f60:c0:m1"
+            },
+            "truncated_cells": []
+        },
+        {
+            "row_idx": 19,
+            "row": {
+                "signature": "def write(self, msg):",
+                "body": "self.msg = msg<EOL>",
+                "docstring": "Write a message.",
+                "id": "f60:c0:m0"
+            },
+            "truncated_cells": []
+        },
+        {
+            "row_idx": 20,
+            "row": {
+                "signature": "async def wait_for(self, cmd, value=None, timeout=<NUM_LIT>):",
+                "body": "try:<EOL><INDENT>async with async_timeout(timeout * <NUM_LIT>):<EOL><INDENT>while True:<EOL><INDENT>msgs = await self.receive()<EOL>msg = check_messages(msgs, cmd, value=value)<EOL>if msg:<EOL><INDENT>return msg<EOL><DEDENT><DEDENT><DEDENT><DEDENT>except asyncio.TimeoutError:<EOL><INDENT>return OrderedDict()<EOL><DEDENT>",
+                "docstring": "Hang until command is received.\n\n        If value is supplied, it will hang until ``cmd:value`` is received.\n\n        Parameters\n        ----------\n        cmd : string\n            Command to wait for in bytestring from microscope CAM interface. If\n            ``value`` is falsey, value of received command does not matter.\n        value : string\n            Wait until ``cmd:value`` is received.\n        timeout : int\n            Minutes to wait for command. If timeout is reached, an empty\n            OrderedDict will be returned.\n\n        Returns\n        -------\n        collections.OrderedDict\n            Last received messsage or empty message if timeout is reached.",
+                "id": "f63:c0:m4"
+            },
+            "truncated_cells": []
+        },
+        {
+            "row_idx": 21,
+            "row": {
+                "signature": "async def connect(self):",
+                "body": "self.reader, self.writer = await asyncio.open_connection(<EOL>self.host, self.port, loop=self.loop)<EOL>self.welcome_msg = await self.reader.read(self.buffer_size)<EOL>",
+                "docstring": "Connect to LASAF through a CAM-socket.",
+                "id": "f63:c0:m1"
+            },
+            "truncated_cells": []
+        },
+        {
+            "row_idx": 22,
+            "row": {
+                "signature": "async def send(self, commands):",
+                "body": "msg = self._prepare_send(commands)<EOL>self.writer.write(msg)<EOL>await self.writer.drain()<EOL>",
+                "docstring": "Send commands to LASAF through CAM-socket.\n\n        Parameters\n        ----------\n        commands : list of tuples or bytes string\n            Commands as a list of tuples or a bytes string. cam.prefix is\n            allways prepended before sending.\n\n        Returns\n        -------\n        int\n            Bytes sent.\n\n        Example\n        -------\n        ::\n\n            >>> # send list of tuples\n            >>> await cam.send([('cmd', 'enableall'), ('value', 'true')])\n\n            >>> # send bytes string\n            >>> await cam.send(b'/cmd:enableall /value:true')",
+                "id": "f63:c0:m2"
+            },
+            "truncated_cells": []
+        },
+        {
+            "row_idx": 23,
+            "row": {
+                "signature": "def close(self):",
+                "body": "if self.writer.can_write_eof():<EOL><INDENT>self.writer.write_eof()<EOL><DEDENT>self.writer.close()<EOL>",
+                "docstring": "Close stream.",
+                "id": "f63:c0:m5"
+            },
+            "truncated_cells": []
+        },
+        {
+            "row_idx": 24,
+            "row": {
+                "signature": "def logger(function):",
+                "body": "@functools.wraps(function)<EOL>def wrapper(*args, **kwargs):<EOL><INDENT>\"\"\"<STR_LIT>\"\"\"<EOL>sep = kwargs.get('<STR_LIT>', '<STR_LIT:U+0020>')<EOL>end = kwargs.get('<STR_LIT:end>', '<STR_LIT>')  <EOL>out = sep.join([repr(x) for x in args])<EOL>out = out + end<EOL>_LOGGER.debug(out)<EOL>return function(*args, **kwargs)<EOL><DEDENT>return wrapper<EOL>",
+                "docstring": "Decorate passed in function and log message to module logger.",
+                "id": "f64:m0"
+            },
+            "truncated_cells": []
+        },
+        {
+            "row_idx": 25,
+            "row": {
+                "signature": "def autofocus_scan(self):",
+                "body": "cmd = [('<STR_LIT>', '<STR_LIT>')]<EOL>self.send(cmd)<EOL>return self.wait_for(*cmd[<NUM_LIT:0>])<EOL>",
+                "docstring": "Start the autofocus job.",
+                "id": "f64:c1:m9"
+            },
+            "truncated_cells": []
+        },
+        {
+            "row_idx": 26,
+            "row": {
+                "signature": "def close(self):",
+                "body": "self.socket.close()<EOL>",
+                "docstring": "Close the socket.",
+                "id": "f64:c1:m6"
+            },
+            "truncated_cells": []
+        },
+        {
+            "row_idx": 27,
+            "row": {
+                "signature": "def give_another_quote(q):",
+                "body": "for qc in QUOTES:<EOL><INDENT>if qc != q:<EOL><INDENT>return qc<EOL><DEDENT><DEDENT>else:<EOL><INDENT>raise ValueError(u'<STR_LIT>'.format(q))<EOL><DEDENT>",
+                "docstring": "When you pass a quote character, returns you an another one if possible",
+                "id": "f75:m0"
+            },
+            "truncated_cells": []
+        },
+        {
+            "row_idx": 28,
+            "row": {
+                "signature": "def find_by(self, **params):",
+                "body": "return self.filter(Q.from_dict(params))<EOL>",
+                "docstring": "Searches in ManageIQ using the ``filter[]`` get parameter.\n\n        This method only supports logical AND so all key/value pairs are considered as equality\n        comparision and all are logically anded.",
+                "id": "f76:c4:m8"
+            },
+            "truncated_cells": []
+        },
+        {
+            "row_idx": 29,
+            "row": {
+                "signature": "def _get_entity_from_href(self, result):",
+                "body": "href_result = result['<STR_LIT>']<EOL>if self.collection._href.startswith(href_result):<EOL><INDENT>return Entity(self.collection, result, incomplete=True)<EOL><DEDENT>href_match = re.match(r\"<STR_LIT>\", href_result)<EOL>if not href_match:<EOL><INDENT>raise ValueError(\"<STR_LIT>\".format(href_result))<EOL><DEDENT>collection_name = href_match.group(<NUM_LIT:2>)<EOL>entry_point = href_match.group(<NUM_LIT:1>)<EOL>new_collection = Collection(<EOL>self.collection.api,<EOL>\"<STR_LIT>\".format(entry_point, collection_name),<EOL>collection_name<EOL>)<EOL>return Entity(new_collection, result, incomplete=True)<EOL>",
+                "docstring": "Returns entity in correct collection.\n\n        If the \"href\" value in result doesn't match the current collection,\n        try to find the collection that the \"href\" refers to.",
+                "id": "f76:c7:m4"
+            },
+            "truncated_cells": []
+        },
+        {
+            "row_idx": 30,
+            "row": {
+                "signature": "def query_string(self, **params):",
+                "body": "return SearchResult(self, self._api.get(self._href, **params))<EOL>",
+                "docstring": "Specify query string to use with the collection.\n\n        Returns: :py:class:`SearchResult`",
+                "id": "f76:c4:m5"
+            },
+            "truncated_cells": []
+        },
+        {
+            "row_idx": 31,
+            "row": {
+                "signature": "@main.command('<STR_LIT>')<EOL>@click.argument('<STR_LIT>', cls=SectionArgument)<EOL>@click.argument('<STR_LIT:value>',<EOL>required=False)<EOL>@click.option('<STR_LIT>',<EOL>'<STR_LIT:-c>',<EOL>is_flag=True,<EOL>help='<STR_LIT>')<EOL>def set_variable(section, value, create):",
+                "body": "if not value:<EOL><INDENT>value = section<EOL>section = None<EOL><DEDENT>try:<EOL><INDENT>logger.debug('<STR_LIT>')<EOL>settings = config.Settings(section=section)<EOL>conf = s3conf.S3Conf(settings=settings)<EOL>env_vars = conf.get_envfile()<EOL>env_vars.set(value, create=create)<EOL><DEDENT>except exceptions.EnvfilePathNotDefinedError:<EOL><INDENT>raise exceptions.EnvfilePathNotDefinedUsageError()<EOL><DEDENT>",
+                "docstring": "Set value of a variable in an environment file for the given section.\nIf the variable is already defined, its value is replaced, otherwise, it is added to the end of the file.\nThe value is given as \"ENV_VAR_NAME=env_var_value\", e.g.:\n\ns3conf set test ENV_VAR_NAME=env_var_value",
+                "id": "f82:m8"
+            },
+            "truncated_cells": []
+        },
+        {
+            "row_idx": 32,
+            "row": {
+                "signature": "@main.command('<STR_LIT>')<EOL>@click.argument('<STR_LIT>',<EOL>required=False)<EOL>@click.option('<STR_LIT>',<EOL>'<STR_LIT>',<EOL>is_flag=True,<EOL>help='<STR_LIT>'<EOL>'<STR_LIT>')<EOL>@click.option('<STR_LIT>',<EOL>is_flag=True,<EOL>help='<STR_LIT>'<EOL>'<STR_LIT>')<EOL>@click.option('<STR_LIT>',<EOL>default='<STR_LIT>',<EOL>show_default=True,<EOL>help='<STR_LIT>')<EOL>@click.option('<STR_LIT>',<EOL>'<STR_LIT>',<EOL>is_flag=True,<EOL>help='<STR_LIT>')<EOL>@click.option('<STR_LIT>',<EOL>'<STR_LIT>',<EOL>is_flag=True)<EOL>@click.option('<STR_LIT>',<EOL>'<STR_LIT:-c>',<EOL>is_flag=True,<EOL>help='<STR_LIT>')<EOL>def env(section, map_files, phusion, phusion_path, quiet, edit, create):",
+                "body": "try:<EOL><INDENT>logger.debug('<STR_LIT>')<EOL>settings = config.Settings(section=section)<EOL>storage = STORAGES['<STR_LIT>'](settings=settings)<EOL>conf = s3conf.S3Conf(storage=storage, settings=settings)<EOL>if edit:<EOL><INDENT>conf.edit(create=create)<EOL><DEDENT>else:<EOL><INDENT>env_vars = conf.get_envfile().as_dict()<EOL>if env_vars.get('<STR_LIT>') and map_files:<EOL><INDENT>conf.download_mapping(env_vars.get('<STR_LIT>'))<EOL><DEDENT>if not quiet:<EOL><INDENT>for var_name, var_value in sorted(env_vars.items(), key=lambda x: x[<NUM_LIT:0>]):<EOL><INDENT>click.echo('<STR_LIT>'.format(var_name, var_value))<EOL><DEDENT><DEDENT>if phusion:<EOL><INDENT>s3conf.phusion_dump(env_vars, phusion_path)<EOL><DEDENT><DEDENT><DEDENT>except exceptions.EnvfilePathNotDefinedError:<EOL><INDENT>raise exceptions.EnvfilePathNotDefinedUsageError()<EOL><DEDENT>except exceptions.FileDoesNotExist as e:<EOL><INDENT>raise UsageError('<STR_LIT>'.format(str(e)))<EOL><DEDENT>",
+                "docstring": "Reads the file defined by the S3CONF variable and output its contents to stdout. Logs are printed to stderr.\nSee options for added functionality: editing file, mapping files, dumping in the phusion-baseimage format, etc.",
+                "id": "f82:m1"
+            },
+            "truncated_cells": []
+        },
+        {
+            "row_idx": 33,
+            "row": {
+                "signature": "@click.group(invoke_without_command=True)<EOL>@click.version_option(version=__version__)<EOL>@click.option('<STR_LIT>', '<STR_LIT>', is_flag=True)<EOL>@click.option('<STR_LIT>',<EOL>'<STR_LIT:-c>',<EOL>is_flag=True,<EOL>help='<STR_LIT>')<EOL>@click.pass_context<EOL>@click_log.simple_verbosity_option('<STR_LIT>')<EOL>def main(ctx, edit, create):",
+                "body": "<EOL>try:<EOL><INDENT>click_log.basic_config('<STR_LIT>')<EOL>logger.debug('<STR_LIT>')<EOL>if edit:<EOL><INDENT>if ctx.invoked_subcommand is None:<EOL><INDENT>logger.debug('<STR_LIT>', config.LOCAL_CONFIG_FILE)<EOL>config.ConfigFileResolver(config.LOCAL_CONFIG_FILE).edit(create=create)<EOL>return<EOL><DEDENT>else:<EOL><INDENT>raise UsageError('<STR_LIT>')<EOL><DEDENT><DEDENT>if ctx.invoked_subcommand is None:<EOL><INDENT>click.echo(main.get_help(ctx))<EOL><DEDENT><DEDENT>except exceptions.FileDoesNotExist as e:<EOL><INDENT>raise UsageError('<STR_LIT>'.format(str(e)))<EOL><DEDENT>",
+                "docstring": "Simple command line tool to help manage environment variables stored in a S3-like system. Facilitates editing text\nfiles remotely stored, as well as downloading and uploading files.",
+                "id": "f82:m0"
+            },
+            "truncated_cells": []
+        },
+        {
+            "row_idx": 34,
+            "row": {
+                "signature": "@main.command('<STR_LIT>')<EOL>@click.argument('<STR_LIT>')<EOL>@click.argument('<STR_LIT>')<EOL>def init(section, remote_file):",
+                "body": "if not remote_file.startswith('<STR_LIT>'):<EOL><INDENT>raise UsageError('<STR_LIT>'<EOL>'<STR_LIT>')<EOL><DEDENT>logger.debug('<STR_LIT>')<EOL>config_file_path = os.path.join(os.getcwd(), '<STR_LIT>', '<STR_LIT>')<EOL>config_file = config.ConfigFileResolver(config_file_path, section=section)<EOL>config_file.set('<STR_LIT>', remote_file)<EOL>gitignore_file_path = os.path.join(os.getcwd(), '<STR_LIT>', '<STR_LIT>')<EOL>config_file.save()<EOL>open(gitignore_file_path, '<STR_LIT:w>').write('<STR_LIT>')<EOL>",
+                "docstring": "Creates the .s3conf config folder and .s3conf/config config file\nwith the provided section name and configuration file. It is a very\nbasic config file. Manually edit it in order to add credentials. E.g.:\n\ns3conf init development s3://my-project/development.env",
+                "id": "f82:m10"
+            },
+            "truncated_cells": []
+        },
+        {
+            "row_idx": 35,
+            "row": {
+                "signature": "@register.simple_tag<EOL>def djfrontend_twbs_theme_css(version=None):",
+                "body": "if version is None:<EOL><INDENT>if not getattr(settings, '<STR_LIT>', False):<EOL><INDENT>version = getattr(settings, '<STR_LIT>', DJFRONTEND_TWBS_VERSION_DEFAULT)<EOL><DEDENT>else:<EOL><INDENT>version = getattr(settings, '<STR_LIT>', DJFRONTEND_TWBS_VERSION_DEFAULT)<EOL><DEDENT><DEDENT>return format_html(<EOL>'<STR_LIT>',<EOL>static=_static_url, v=version, min=_min)<EOL>",
+                "docstring": "Returns Twitter Bootstrap Theme CSS file.",
+                "id": "f94:m14"
+            },
+            "truncated_cells": []
+        },
+        {
+            "row_idx": 36,
+            "row": {
+                "signature": "@register.simple_tag<EOL>def djfrontend_jquery(version=None):",
+                "body": "if version is None:<EOL><INDENT>version = getattr(settings, '<STR_LIT>', DJFRONTEND_JQUERY_DEFAULT)<EOL><DEDENT>if getattr(settings, '<STR_LIT>', False):<EOL><INDENT>template = '<STR_LIT>'<EOL><DEDENT>else:<EOL><INDENT>template = (<EOL>'<STR_LIT>'<EOL>'<STR_LIT>')<EOL><DEDENT>return format_html(template, static=_static_url, v=version)<EOL>",
+                "docstring": "Returns jQuery JavaScript file according to version number.\nTEMPLATE_DEBUG returns full file, otherwise returns minified file from Google CDN with local fallback.\nIncluded in HTML5 Boilerplate.",
+                "id": "f94:m5"
+            },
+            "truncated_cells": []
+        },
+        {
+            "row_idx": 37,
+            "row": {
+                "signature": "@register.simple_tag<EOL>def djfrontend_twbs_js(version=None, files=None):",
+                "body": "if version is None:<EOL><INDENT>if not getattr(settings, '<STR_LIT>', False):<EOL><INDENT>version = getattr(settings, '<STR_LIT>', DJFRONTEND_TWBS_VERSION_DEFAULT)<EOL><DEDENT>else:<EOL><INDENT>version = getattr(settings, '<STR_LIT>', DJFRONTEND_TWBS_VERSION_DEFAULT)<EOL><DEDENT><DEDENT>if files:<EOL><INDENT>if files != '<STR_LIT:all>':<EOL><INDENT>files = files.split('<STR_LIT:U+0020>')<EOL><DEDENT><DEDENT>elif getattr(settings, '<STR_LIT>', False) and settings.DJFRONTEND_TWBS_JS_FILES != '<STR_LIT:all>':<EOL><INDENT>files = settings.DJFRONTEND_TWBS_JS_FILES.split('<STR_LIT:U+0020>')<EOL><DEDENT>else:<EOL><INDENT>files = '<STR_LIT:all>'<EOL><DEDENT>if files == '<STR_LIT:all>':<EOL><INDENT>return format_html(<EOL>'<STR_LIT>'<EOL>'<STR_LIT>',<EOL>v=version, static=_static_url)<EOL><DEDENT>else:<EOL><INDENT>if '<STR_LIT>' in files and '<STR_LIT>' not in files:<EOL><INDENT>files.append('<STR_LIT>')<EOL><DEDENT>for file in files:<EOL><INDENT>file = ['<STR_LIT>' %<EOL>(_static_url, version, file) for file in files]<EOL><DEDENT>return mark_safe('<STR_LIT:\\n>'.join(file))<EOL><DEDENT>",
+                "docstring": "Returns Twitter Bootstrap JavaScript file(s).\nall returns concatenated file; full file for TEMPLATE_DEBUG, minified otherwise.\n\nOther choice are:\n    affix,\n    alert,\n    button,\n    carousel,\n    collapse,\n    dropdown,\n    modal,\n    popover (adds tooltip if not included),\n    scrollspy,\n    tab,\n    tooltip,\n    transition.\n\nIndividual files are not minified.",
+                "id": "f94:m15"
+            },
+            "truncated_cells": []
+        },
+        {
+            "row_idx": 38,
+            "row": {
+                "signature": "def search(self, **kwargs):",
+                "body": "params = {}<EOL>available_params = [<EOL>\"<STR_LIT>\", \"<STR_LIT>\", \"<STR_LIT:q>\", \"<STR_LIT:start>\",<EOL>\"<STR_LIT:count>\", \"<STR_LIT>\", \"<STR_LIT>\", \"<STR_LIT>\", \"<STR_LIT>\",<EOL>\"<STR_LIT>\", \"<STR_LIT>\",<EOL>\"<STR_LIT>\", \"<STR_LIT>\", \"<STR_LIT>\"]<EOL>for key in available_params:<EOL><INDENT>if key in kwargs:<EOL><INDENT>params[key] = kwargs[key]<EOL><DEDENT><DEDENT>results = self.api.get(\"<STR_LIT>\", params)<EOL>return results<EOL>",
+                "docstring": ":param entity_id: location id\n:param entity_type: location type (city, subzone, zone, lanmark, metro , group)\n:param q: search keyword\n:param start: fetch results after offset\n:param count: max number of results to display\n:param lat: latitude\n:param lon: longitude\n:param radius: radius around (lat,lon); to define search area, defined in meters(M)\n:param cuisines: list of cuisine id's separated by comma\n:param establishment_type: estblishment id obtained from establishments call\n:param collection_id: collection id obtained from collections call\n:param category: category ids obtained from categories call\n:param sort: sort restaurants by (cost, rating, real_distance)\n:param order: used with 'sort' parameter to define ascending / descending\n:return: json response\nThe location input can be specified using Zomato location ID or coordinates. Cuisine / Establishment /\nCollection IDs can be obtained from respective api calls.\n\nPartner Access is required to access photos and reviews.\n\nExamples:\n- To search for 'Italian' restaurants in 'Manhattan, New York City',\nset cuisines = 55, entity_id = 94741 and entity_type = zone\n- To search for 'cafes' in 'Manhattan, New York City',\nset establishment_type = 1, entity_type = zone and entity_id = 94741\n- Get list of all restaurants in 'Trending this Week' collection in 'New York City' by using\nentity_id = 280, entity_type = city and collection_id = 1",
+                "id": "f103:c0:m12"
+            },
+            "truncated_cells": []
+        },
+        {
+            "row_idx": 39,
+            "row": {
+                "signature": "def getRestaurantDetails(self, restaurant_id):",
+                "body": "params = {\"<STR_LIT>\": restaurant_id}<EOL>restaurant_details = self.api.get(\"<STR_LIT>\", params)<EOL>return restaurant_details<EOL>",
+                "docstring": ":param restaurant_id: id of restaurant whose details are requested\n:return: json response\nGet detailed restaurant information using Zomato restaurant ID.\nPartner Access is required to access photos and reviews.",
+                "id": "f103:c0:m10"
+            },
+            "truncated_cells": []
+        },
+        {
+            "row_idx": 40,
+            "row": {
+                "signature": "def getEstablishments(self, city_id, **kwargs):",
+                "body": "params = {\"<STR_LIT>\": city_id}<EOL>optional_params = [\"<STR_LIT>\", \"<STR_LIT>\"]<EOL>for key in optional_params:<EOL><INDENT>if key in kwargs:<EOL><INDENT>params[key] = kwargs[key]<EOL><DEDENT><DEDENT>establishments = self.api.get(\"<STR_LIT>\", params)<EOL>return establishments<EOL>",
+                "docstring": ":param city_id: id of the city for which collections are needed\n:param lat: latitude\n:param lon: longitude\nGet a list of restaurant types in a city. The location/City input can be provided in the following ways\n- Using Zomato City ID\n- Using coordinates of any location within a city\nList of all restaurants categorized under a particular restaurant type can obtained using\n/Search API with Establishment ID and location details as inputs",
+                "id": "f103:c0:m5"
+            },
+            "truncated_cells": []
+        },
+        {
+            "row_idx": 41,
+            "row": {
+                "signature": "def parse(self):",
+                "body": "nevents_wrong = <NUM_LIT:0><EOL>feed_json = json.loads(self.feed)<EOL>if '<STR_LIT>' not in feed_json['<STR_LIT>']:<EOL><INDENT>return<EOL><DEDENT>self.cells = feed_json['<STR_LIT>']['<STR_LIT>']<EOL>self.ncell = <NUM_LIT:0><EOL>event_fields = self.__get_event_fields()<EOL>while self.ncell < len(self.cells):<EOL><INDENT>event = self.__get_next_event(event_fields)<EOL>if event['<STR_LIT>'] is None or event['<STR_LIT>'] is None:<EOL><INDENT>logger.warning(\"<STR_LIT>\", event)<EOL>nevents_wrong += <NUM_LIT:1><EOL>continue<EOL><DEDENT>yield event<EOL><DEDENT>logger.info(\"<STR_LIT>\", nevents_wrong)<EOL>",
+                "docstring": "Parse the MozillaClub spreadsheet feed cells json.",
+                "id": "f116:c2:m1"
+            },
+            "truncated_cells": []
+        },
+        {
+            "row_idx": 42,
+            "row": {
+                "signature": "def __get_event_fields(self):",
+                "body": "event_fields = {}<EOL>while self.ncell < len(self.cells):<EOL><INDENT>cell = self.cells[self.ncell]<EOL>row = cell['<STR_LIT>']['<STR_LIT>']<EOL>if int(row) > <NUM_LIT:1>:<EOL><INDENT>break<EOL><DEDENT>ncol = int(cell['<STR_LIT>']['<STR_LIT>'])<EOL>name = cell['<STR_LIT:content>']['<STR_LIT>']<EOL>event_fields[ncol] = name<EOL>if ncol in EVENT_TEMPLATE:<EOL><INDENT>if event_fields[ncol] != EVENT_TEMPLATE[ncol]:<EOL><INDENT>logger.warning(\"<STR_LIT>\",<EOL>name, EVENT_TEMPLATE[ncol])<EOL><DEDENT><DEDENT>else:<EOL><INDENT>logger.warning(\"<STR_LIT>\", name)<EOL><DEDENT>self.ncell += <NUM_LIT:1><EOL><DEDENT>return event_fields<EOL>",
+                "docstring": "Get the events fields (columns) from the cells received.",
+                "id": "f116:c2:m2"
+            },
+            "truncated_cells": []
+        },
+        {
+            "row_idx": 43,
+            "row": {
+                "signature": "@classmethod<EOL><INDENT>def has_resuming(cls):<DEDENT>",
+                "body": "return False<EOL>",
+                "docstring": "Returns whether it supports to resume the fetch process.\n\n        :returns: this backend supports items resuming",
+                "id": "f116:c0:m4"
+            },
+            "truncated_cells": []
+        },
+        {
+            "row_idx": 44,
+            "row": {
+                "signature": "def get_items(self, category=CATEGORY_EVENT, offset=REMO_DEFAULT_OFFSET):",
+                "body": "more = True  <EOL>next_uri = None  <EOL>page = ReMoClient.FIRST_PAGE<EOL>page += int(offset / ReMoClient.ITEMS_PER_PAGE)<EOL>if category == CATEGORY_EVENT:<EOL><INDENT>api = self.api_events_url<EOL><DEDENT>elif category == CATEGORY_ACTIVITY:<EOL><INDENT>api = self.api_activities_url<EOL><DEDENT>elif category == CATEGORY_USER:<EOL><INDENT>api = self.api_users_url<EOL><DEDENT>else:<EOL><INDENT>raise ValueError(category + '<STR_LIT>')<EOL><DEDENT>while more:<EOL><INDENT>params = {<EOL>\"<STR_LIT>\": page,<EOL>\"<STR_LIT>\": \"<STR_LIT>\"<EOL>}<EOL>logger.debug(\"<STR_LIT>\",<EOL>api, str(params))<EOL>raw_items = self.fetch(api, payload=params)<EOL>yield raw_items<EOL>items_data = json.loads(raw_items)<EOL>next_uri = items_data['<STR_LIT>']<EOL>if not next_uri:<EOL><INDENT>more = False<EOL><DEDENT>else:<EOL><INDENT>parsed_uri = urllib.parse.urlparse(next_uri)<EOL>parsed_params = urllib.parse.parse_qs(parsed_uri.query)<EOL>page = parsed_params['<STR_LIT>'][<NUM_LIT:0>]<EOL><DEDENT><DEDENT>",
+                "docstring": "Retrieve all items for category using pagination",
+                "id": "f117:c1:m1"
+            },
+            "truncated_cells": []
+        },
+        {
+            "row_idx": 45,
+            "row": {
+                "signature": "def metadata(self, item, filter_classified=False):",
+                "body": "item = super().metadata(item, filter_classified=filter_classified)<EOL>item['<STR_LIT>'] = item['<STR_LIT:data>'].pop('<STR_LIT>')<EOL>return item<EOL>",
+                "docstring": "ReMo metadata.\n\n        This method takes items overrides `metadata` method to add extra\n        information related to Remo (offset of the item).\n\n        :param item: an item fetched by a backend\n        :param filter_classified: sets if classified fields were filtered",
+                "id": "f117:c0:m3"
+            },
+            "truncated_cells": []
+        },
+        {
+            "row_idx": 46,
+            "row": {
+                "signature": "@classmethod<EOL><INDENT>def has_archiving(cls):<DEDENT>",
+                "body": "return True<EOL>",
+                "docstring": "Returns whether it supports archiving items on the fetch process.\n\n        :returns: this backend supports items archive",
+                "id": "f117:c0:m4"
+            },
+            "truncated_cells": []
+        },
+        {
+            "row_idx": 47,
+            "row": {
+                "signature": "def fetch_items(self, category, **kwargs):",
+                "body": "offset = kwargs['<STR_LIT>']<EOL>logger.info(\"<STR_LIT>\",<EOL>self.url, category, offset)<EOL>nitems = <NUM_LIT:0>  <EOL>titems = <NUM_LIT:0>  <EOL>page = int(offset / ReMoClient.ITEMS_PER_PAGE)<EOL>page_offset = page * ReMoClient.ITEMS_PER_PAGE<EOL>drop_items = offset - page_offset<EOL>logger.debug(\"<STR_LIT>\",<EOL>drop_items, offset, page, page_offset)<EOL>current_offset = offset<EOL>for raw_items in self.client.get_items(category, offset):<EOL><INDENT>items_data = json.loads(raw_items)<EOL>titems = items_data['<STR_LIT:count>']<EOL>logger.info(\"<STR_LIT>\",<EOL>titems - current_offset, current_offset)<EOL>items = items_data['<STR_LIT>']<EOL>for item in items:<EOL><INDENT>if drop_items > <NUM_LIT:0>:<EOL><INDENT>drop_items -= <NUM_LIT:1><EOL>continue<EOL><DEDENT>raw_item_details = self.client.fetch(item['<STR_LIT>'])<EOL>item_details = json.loads(raw_item_details)<EOL>item_details['<STR_LIT>'] = current_offset<EOL>current_offset += <NUM_LIT:1><EOL>yield item_details<EOL>nitems += <NUM_LIT:1><EOL><DEDENT><DEDENT>logger.info(\"<STR_LIT>\", nitems, titems, offset)<EOL>",
+                "docstring": "Fetch items\n\n        :param category: the category of items to fetch\n        :param kwargs: backend arguments\n\n        :returns: a generator of items",
+                "id": "f117:c0:m2"
+            },
+            "truncated_cells": []
+        },
+        {
+            "row_idx": 48,
+            "row": {
+                "signature": "@classmethod<EOL><INDENT>def setup_cmd_parser(cls):<DEDENT>",
+                "body": "parser = BackendCommandArgumentParser(cls.BACKEND.CATEGORIES,<EOL>offset=True,<EOL>archive=True)<EOL>parser.parser.add_argument('<STR_LIT:url>', nargs='<STR_LIT:?>',<EOL>default=\"<STR_LIT>\",<EOL>help=\"<STR_LIT>\")<EOL>return parser<EOL>",
+                "docstring": "Returns the ReMo argument parser.",
+                "id": "f117:c2:m0"
+            },
+            "truncated_cells": []
+        },
+        {
+            "row_idx": 49,
+            "row": {
+                "signature": "def crates(self, from_page=<NUM_LIT:1>):",
+                "body": "path = urijoin(CRATES_API_URL, CATEGORY_CRATES)<EOL>raw_crates = self.__fetch_items(path, from_page)<EOL>return raw_crates<EOL>",
+                "docstring": "Get crates in alphabetical order",
+                "id": "f118:c1:m2"
+            },
+            "truncated_cells": []
+        },
+        {
+            "row_idx": 50,
+            "row": {
+                "signature": "@classmethod<EOL><INDENT>def has_resuming(cls):<DEDENT>",
+                "body": "return False<EOL>",
+                "docstring": "Returns whether it supports to resume the fetch process.\n\n        :returns: this backend supports items resuming",
+                "id": "f118:c0:m4"
+            },
+            "truncated_cells": []
+        },
+        {
+            "row_idx": 51,
+            "row": {
+                "signature": "def fetch(self, url, payload=None):",
+                "body": "response = super().fetch(url, payload=payload)<EOL>return response.text<EOL>",
+                "docstring": "Return the textual content associated to the Response object",
+                "id": "f118:c1:m6"
+            },
+            "truncated_cells": []
+        },
+        {
+            "row_idx": 52,
+            "row": {
+                "signature": "def __fetch_items(self, path, page=<NUM_LIT:1>):",
+                "body": "fetch_data = True<EOL>parsed_crates = <NUM_LIT:0><EOL>total_crates = <NUM_LIT:0><EOL>while fetch_data:<EOL><INDENT>logger.debug(\"<STR_LIT>\", page)<EOL>try:<EOL><INDENT>payload = {'<STR_LIT>': '<STR_LIT>', '<STR_LIT>': page}<EOL>raw_content = self.fetch(path, payload=payload)<EOL>content = json.loads(raw_content)<EOL>parsed_crates += len(content['<STR_LIT>'])<EOL>if not total_crates:<EOL><INDENT>total_crates = content['<STR_LIT>']['<STR_LIT>']<EOL><DEDENT><DEDENT>except requests.exceptions.HTTPError as e:<EOL><INDENT>logger.error(\"<STR_LIT>\", e.response.text)<EOL>raise e<EOL><DEDENT>yield raw_content<EOL>page += <NUM_LIT:1><EOL>if parsed_crates >= total_crates:<EOL><INDENT>fetch_data = False<EOL><DEDENT><DEDENT>",
+                "docstring": "Return the items from Crates.io API using pagination",
+                "id": "f118:c1:m5"
+            },
+            "truncated_cells": []
+        },
+        {
+            "row_idx": 53,
+            "row": {
+                "signature": "def _init_client(self, from_archive=False):",
+                "body": "return CratesClient(self.sleep_time, self.archive, from_archive)<EOL>",
+                "docstring": "Init client",
+                "id": "f118:c0:m8"
+            },
+            "truncated_cells": []
+        },
+        {
+            "row_idx": 54,
+            "row": {
+                "signature": "@staticmethod<EOL><INDENT>def metadata_category(item):<DEDENT>",
+                "body": "if '<STR_LIT>' in item:<EOL><INDENT>return CATEGORY_SUMMARY<EOL><DEDENT>else:<EOL><INDENT>return CATEGORY_CRATES<EOL><DEDENT>",
+                "docstring": "Extracts the category from an item.\n\n        This backend generates two types of item: 'summary' and 'crate'.",
+                "id": "f118:c0:m7"
+            },
+            "truncated_cells": []
+        },
+        {
+            "row_idx": 55,
+            "row": {
+                "signature": "@classmethod<EOL><INDENT>def setup_cmd_parser(cls):<DEDENT>",
+                "body": "parser = BackendCommandArgumentParser(cls.BACKEND.CATEGORIES,<EOL>from_date=True,<EOL>archive=True,<EOL>token_auth=True)<EOL>group = parser.parser.add_argument_group('<STR_LIT>')<EOL>group.add_argument('<STR_LIT>', dest='<STR_LIT>',<EOL>default=SLEEP_TIME, type=int,<EOL>help=\"<STR_LIT>\")<EOL>return parser<EOL>",
+                "docstring": "Returns the Crates argument parser.",
+                "id": "f118:c2:m0"
+            },
+            "truncated_cells": []
+        },
+        {
+            "row_idx": 56,
+            "row": {
+                "signature": "def fetch(self, category=CATEGORY_CRATES, from_date=DEFAULT_DATETIME):",
+                "body": "if not from_date:<EOL><INDENT>from_date = DEFAULT_DATETIME<EOL><DEDENT>from_date = datetime_to_utc(from_date)<EOL>kwargs = {\"<STR_LIT>\": from_date}<EOL>items = super().fetch(category, **kwargs)<EOL>return items<EOL>",
+                "docstring": "Fetch package data.\n\n        The method retrieves packages and summary from Crates.io.\n\n        :param category: the category of items to fetch\n        :param from_date: obtain packages updated since this date\n\n        :returns: a summary and crate items",
+                "id": "f118:c0:m1"
+            },
+            "truncated_cells": []
+        },
+        {
+            "row_idx": 57,
+            "row": {
+                "signature": "def summary(self):",
+                "body": "path = urijoin(CRATES_API_URL, CATEGORY_SUMMARY)<EOL>raw_content = self.fetch(path)<EOL>return raw_content<EOL>",
+                "docstring": "Get Crates.io summary",
+                "id": "f118:c1:m1"
+            },
+            "truncated_cells": []
+        },
+        {
+            "row_idx": 58,
+            "row": {
+                "signature": "def get_question_answers(self, question_id):",
+                "body": "page = KitsuneClient.FIRST_PAGE<EOL>while True:<EOL><INDENT>api_answers_url = urijoin(self.base_url, '<STR_LIT>') + '<STR_LIT:/>'<EOL>params = {<EOL>\"<STR_LIT>\": page,<EOL>\"<STR_LIT>\": question_id,<EOL>\"<STR_LIT>\": \"<STR_LIT>\"<EOL>}<EOL>answers_raw = self.fetch(api_answers_url, params)<EOL>yield answers_raw<EOL>answers = json.loads(answers_raw)<EOL>if not answers['<STR_LIT>']:<EOL><INDENT>break<EOL><DEDENT>page += <NUM_LIT:1><EOL><DEDENT>",
+                "docstring": "Retrieve all answers for a question from older to newer (updated)",
+                "id": "f119:c1:m2"
+            },
+            "truncated_cells": []
+        },
+        {
+            "row_idx": 59,
+            "row": {
+                "signature": "def get_questions(self, offset=None):",
+                "body": "page = KitsuneClient.FIRST_PAGE<EOL>if offset:<EOL><INDENT>page += int(offset / KitsuneClient.ITEMS_PER_PAGE)<EOL><DEDENT>while True:<EOL><INDENT>api_questions_url = urijoin(self.base_url, '<STR_LIT>') + '<STR_LIT:/>'<EOL>params = {<EOL>\"<STR_LIT>\": page,<EOL>\"<STR_LIT>\": \"<STR_LIT>\"<EOL>}<EOL>questions = self.fetch(api_questions_url, params)<EOL>yield questions<EOL>questions_json = json.loads(questions)<EOL>next_uri = questions_json['<STR_LIT>']<EOL>if not next_uri:<EOL><INDENT>break<EOL><DEDENT>page += <NUM_LIT:1><EOL><DEDENT>",
+                "docstring": "Retrieve questions from older to newer updated starting offset",
+                "id": "f119:c1:m1"
+            },
+            "truncated_cells": []
+        },
+        {
+            "row_idx": 60,
+            "row": {
+                "signature": "def _init_client(self, from_archive=False):",
+                "body": "return KitsuneClient(self.url, self.archive, from_archive)<EOL>",
+                "docstring": "Init client",
+                "id": "f119:c0:m9"
+            },
+            "truncated_cells": []
+        },
+        {
+            "row_idx": 61,
+            "row": {
+                "signature": "def metadata(self, item, filter_classified=False):",
+                "body": "item = super().metadata(item, filter_classified=filter_classified)<EOL>item['<STR_LIT>'] = item['<STR_LIT:data>'].pop('<STR_LIT>')<EOL>return item<EOL>",
+                "docstring": "Kitsune metadata.\n\n        This method takes items overrides `metadata` method to add extra\n        information related to Kitsune (offset of the question).\n\n        :param item: an item fetched by a backend\n        :param filter_classified: sets if classified fields were filtered",
+                "id": "f119:c0:m3"
+            },
+            "truncated_cells": []
+        },
+        {
+            "row_idx": 62,
+            "row": {
+                "signature": "def get_token_from_post_data(self, data):",
+                "body": "try:<EOL><INDENT>for x in ['<STR_LIT>', '<STR_LIT>', '<STR_LIT>']:<EOL><INDENT>if not data.get(x):<EOL><INDENT>raise TypeError(\"<STR_LIT>\".format(x))<EOL><DEDENT><DEDENT>if '<STR_LIT>' in data:<EOL><INDENT>return self.refresh_token(**data)<EOL><DEDENT>for x in ['<STR_LIT>', '<STR_LIT:code>']:<EOL><INDENT>if not data.get(x):<EOL><INDENT>raise TypeError(\"<STR_LIT>\".format(x))            <EOL><DEDENT><DEDENT>return self.get_token(**data)<EOL><DEDENT>except TypeError as exc:<EOL><INDENT>self._handle_exception(exc)<EOL>return self._make_json_error_response('<STR_LIT>')<EOL><DEDENT>except StandardError as exc:<EOL><INDENT>self._handle_exception(exc)<EOL>return self._make_json_error_response('<STR_LIT>')<EOL><DEDENT>",
+                "docstring": "Get a token response from POST data.\n\n        :param data: POST data containing authorization information.\n        :type data: dict\n        :rtype: requests.Response",
+                "id": "f126:c1:m10"
+            },
+            "truncated_cells": []
+        },
+        {
+            "row_idx": 63,
+            "row": {
+                "signature": "def get_authorization_code_from_uri(self, uri):",
+                "body": "params = utils.url_query_params(uri)<EOL>try:<EOL><INDENT>if '<STR_LIT>' not in params:<EOL><INDENT>raise TypeError('<STR_LIT>')<EOL><DEDENT>if '<STR_LIT>' not in params:<EOL><INDENT>raise TypeError('<STR_LIT>')<EOL><DEDENT>if '<STR_LIT>' not in params:<EOL><INDENT>raise TypeError('<STR_LIT>')<EOL><DEDENT>return self.get_authorization_code(**params)<EOL><DEDENT>except TypeError as exc:<EOL><INDENT>self._handle_exception(exc)<EOL>err = '<STR_LIT>'<EOL>if '<STR_LIT>' in params:<EOL><INDENT>u = params['<STR_LIT>']<EOL>return self._make_redirect_error_response(u, err)<EOL><DEDENT>else:<EOL><INDENT>return self._invalid_redirect_uri_response()<EOL><DEDENT><DEDENT>except StandardError as exc:<EOL><INDENT>self._handle_exception(exc)<EOL>err = '<STR_LIT>'<EOL>u = params['<STR_LIT>']<EOL>return self._make_redirect_error_response(u, err)<EOL><DEDENT>",
+                "docstring": "Get authorization code response from a URI. This method will\n        ignore the domain and path of the request, instead\n        automatically parsing the query string parameters.\n\n        :param uri: URI to parse for authorization information.\n        :type uri: str\n        :rtype: requests.Response",
+                "id": "f126:c1:m9"
+            },
+            "truncated_cells": []
+        },
+        {
+            "row_idx": 64,
+            "row": {
+                "signature": "def _invalid_redirect_uri_response(self):",
+                "body": "return self._make_json_error_response('<STR_LIT>')<EOL>",
+                "docstring": "What to return when the redirect_uri parameter is missing.\n\n        :rtype: requests.Response",
+                "id": "f126:c0:m5"
+            },
+            "truncated_cells": []
+        },
+        {
+            "row_idx": 65,
+            "row": {
+                "signature": "def get_token(self,<EOL>grant_type,<EOL>client_id,<EOL>client_secret,<EOL>redirect_uri,<EOL>code,<EOL>**params):",
+                "body": "<EOL>if grant_type != '<STR_LIT>':<EOL><INDENT>return self._make_json_error_response('<STR_LIT>')<EOL><DEDENT>is_valid_client_id = self.validate_client_id(client_id)<EOL>is_valid_client_secret = self.validate_client_secret(client_id,<EOL>client_secret)<EOL>is_valid_redirect_uri = self.validate_redirect_uri(client_id,<EOL>redirect_uri)<EOL>scope = params.get('<STR_LIT>', '<STR_LIT>')<EOL>is_valid_scope = self.validate_scope(client_id, scope)<EOL>data = self.from_authorization_code(client_id, code, scope)<EOL>is_valid_grant = data is not None<EOL>if not (is_valid_client_id and is_valid_client_secret):<EOL><INDENT>return self._make_json_error_response('<STR_LIT>')<EOL><DEDENT>if not is_valid_grant or not is_valid_redirect_uri:<EOL><INDENT>return self._make_json_error_response('<STR_LIT>')<EOL><DEDENT>if not is_valid_scope:<EOL><INDENT>return self._make_json_error_response('<STR_LIT>')<EOL><DEDENT>self.discard_authorization_code(client_id, code)<EOL>access_token = self.generate_access_token()<EOL>token_type = self.token_type<EOL>expires_in = self.token_expires_in<EOL>refresh_token = self.generate_refresh_token()<EOL>self.persist_token_information(client_id=client_id,<EOL>scope=scope,<EOL>access_token=access_token,<EOL>token_type=token_type,<EOL>expires_in=expires_in,<EOL>refresh_token=refresh_token,<EOL>data=data)<EOL>return self._make_json_response({<EOL>'<STR_LIT>': access_token,<EOL>'<STR_LIT>': token_type,<EOL>'<STR_LIT>': expires_in,<EOL>'<STR_LIT>': refresh_token<EOL>})<EOL>",
+                "docstring": "Generate access token HTTP response.\n\n        :param grant_type: Desired grant type. Must be \"authorization_code\".\n        :type grant_type: str\n        :param client_id: Client ID.\n        :type client_id: str\n        :param client_secret: Client secret.\n        :type client_secret: str\n        :param redirect_uri: Client redirect URI.\n        :type redirect_uri: str\n        :param code: Authorization code.\n        :type code: str\n        :rtype: requests.Response",
+                "id": "f126:c1:m8"
+            },
+            "truncated_cells": []
+        },
+        {
+            "row_idx": 66,
+            "row": {
+                "signature": "@property<EOL><INDENT>def token_length(self):<DEDENT>",
+                "body": "return <NUM_LIT><EOL>",
+                "docstring": "Property method to get the length used to generate tokens.\n\n        :rtype: int",
+                "id": "f126:c1:m0"
+            },
+            "truncated_cells": []
+        },
+        {
+            "row_idx": 67,
+            "row": {
+                "signature": "def _handle_exception(self, exc):",
+                "body": "logger = logging.getLogger(__name__)<EOL>logger.exception(exc)<EOL>",
+                "docstring": "Handle an internal exception that was caught and suppressed.\n\n        :param exc: Exception to process.\n        :type exc: Exception",
+                "id": "f126:c0:m0"
+            },
+            "truncated_cells": []
+        },
+        {
+            "row_idx": 68,
+            "row": {
+                "signature": "def get_token(self, code, **params):",
+                "body": "params['<STR_LIT:code>'] = code<EOL>if '<STR_LIT>' not in params:<EOL><INDENT>params['<STR_LIT>'] = self.default_grant_type<EOL><DEDENT>params.update({'<STR_LIT>': self.client_id,<EOL>'<STR_LIT>': self.client_secret,<EOL>'<STR_LIT>': self.redirect_uri})<EOL>response = self.http_post(self.token_uri, params)<EOL>try:<EOL><INDENT>return response.json()<EOL><DEDENT>except TypeError:<EOL><INDENT>return response.json<EOL><DEDENT>",
+                "docstring": "Get an access token from the provider token URI.\n\n        :param code: Authorization code.\n        :type code: str\n        :return: Dict containing access token, refresh token, etc.\n        :rtype: dict",
+                "id": "f127:c0:m5"
+            },
+            "truncated_cells": []
+        },
+        {
+            "row_idx": 69,
+            "row": {
+                "signature": "def url_query_params(url):",
+                "body": "return dict(urlparse.parse_qsl(urlparse.urlparse(url).query, True))<EOL>",
+                "docstring": "Return query parameters as a dict from the specified URL.\n\n    :param url: URL.\n    :type url: str\n    :rtype: dict",
+                "id": "f128:m1"
+            },
+            "truncated_cells": []
+        },
+        {
+            "row_idx": 70,
+            "row": {
+                "signature": "def setUp(self):",
+                "body": "self.places = ctllib.Places(config='<STR_LIT>', messages='<STR_LIT>')<EOL>def _cleanup():<EOL><INDENT>for d in self.places:<EOL><INDENT>if os.path.exists(d):<EOL><INDENT>shutil.rmtree(d)<EOL><DEDENT><DEDENT><DEDENT>_cleanup()<EOL>self.addCleanup(_cleanup)<EOL>for d in self.places:<EOL><INDENT>os.mkdir(d)<EOL><DEDENT>",
+                "docstring": "Set up configuration and build/cleanup directories",
+                "id": "f133:c1:m0"
+            },
+            "truncated_cells": []
+        },
+        {
+            "row_idx": 71,
+            "row": {
+                "signature": "def setUp(self):",
+                "body": "self.parser = ctllib.PARSER<EOL>self.base = ['<STR_LIT>', '<STR_LIT>', '<STR_LIT>', '<STR_LIT>']<EOL>",
+                "docstring": "Initialize the parser, required arguments",
+                "id": "f133:c0:m0"
+            },
+            "truncated_cells": []
+        },
+        {
+            "row_idx": 72,
+            "row": {
+                "signature": "def jsonFrom(fname):",
+                "body": "with io.open(fname, \"<STR_LIT:r>\", encoding='<STR_LIT:utf-8>') as fp:<EOL><INDENT>return json.loads(fp.read())<EOL><DEDENT>",
+                "docstring": "Load JSON from a file",
+                "id": "f133:m0"
+            },
+            "truncated_cells": []
+        },
+        {
+            "row_idx": 73,
+            "row": {
+                "signature": "def remove(self, name):",
+                "body": "self.events.append(('<STR_LIT>', name))<EOL>",
+                "docstring": "Get a remove event",
+                "id": "f136:c0:m2"
+            },
+            "truncated_cells": []
+        },
+        {
+            "row_idx": 74,
+            "row": {
+                "signature": "def setUp(self):",
+                "body": "DirectoryBasedTest.setUp(self)<EOL>self.receiver = EventRecorder()<EOL>self.monitor = directory_monitor.checker(self.testDirectory,<EOL>self.receiver)<EOL>self.assertFalse(self.receiver.events)<EOL>",
+                "docstring": "Set up the test",
+                "id": "f136:c6:m0"
+            },
+            "truncated_cells": []
+        },
+        {
+            "row_idx": 75,
+            "row": {
+                "signature": "def setUp(self):",
+                "body": "def _cleanup(testDir):<EOL><INDENT>if os.path.exists(testDir):<EOL><INDENT>shutil.rmtree(testDir)<EOL><DEDENT><DEDENT>self.testDirs = {}<EOL>for subd in ['<STR_LIT>', '<STR_LIT>']:<EOL><INDENT>testDir = self.testDirs[subd] = os.path.join(os.getcwd(), subd)<EOL>self.addCleanup(_cleanup, testDir)<EOL>_cleanup(testDir)<EOL>os.makedirs(testDir)<EOL><DEDENT>self.my_reactor = test_procmon.DummyProcessReactor()<EOL>self.service = service.get(self.testDirs['<STR_LIT>'],<EOL>self.testDirs['<STR_LIT>'],<EOL><NUM_LIT:5>, reactor=self.my_reactor)<EOL>self._finishSetUp()<EOL>",
+                "docstring": "Set up the test",
+                "id": "f138:c2:m0"
+            },
+            "truncated_cells": []
+        },
+        {
+            "row_idx": 76,
+            "row": {
+                "signature": "def setContent(self, content):",
+                "body": "self.content = content<EOL>",
+                "docstring": "Set file contents",
+                "id": "f138:c0:m2"
+            },
+            "truncated_cells": []
+        },
+        {
+            "row_idx": 77,
+            "row": {
+                "signature": "def request(self, method, url, headers, body):",
+                "body": "d = defer.Deferred()<EOL>self.calls.append((method, url, headers, body))<EOL>self.pending[url].append(d)<EOL>return d<EOL>",
+                "docstring": "Pretend to make a request",
+                "id": "f142:c0:m1"
+            },
+            "truncated_cells": []
+        },
+        {
+            "row_idx": 78,
+            "row": {
+                "signature": "def getArgs(self):",
+                "body": "return '<STR_LIT:U+0020>'.join('<STR_LIT:U+0020>'.join('<STR_LIT>' % (key, vpart)<EOL>for vpart in value.split())<EOL>for key, value in six.iteritems(self.args)).split()<EOL>",
+                "docstring": "Get the arguments as a list of strings",
+                "id": "f144:c2:m1"
+            },
+            "truncated_cells": []
+        },
+        {
+            "row_idx": 79,
+            "row": {
+                "signature": "def checker(location, receiver):",
+                "body": "path = filepath.FilePath(location)<EOL>files = set()<EOL>filesContents = {}<EOL>def _check(path):<EOL><INDENT>currentFiles = set(fname for fname in os.listdir(location)<EOL>if not fname.endswith('<STR_LIT>'))<EOL>removed = files - currentFiles<EOL>added = currentFiles - files<EOL>for fname in added:<EOL><INDENT>contents = path.child(fname).getContent()<EOL>filesContents[fname] = contents<EOL>receiver.add(fname, contents)<EOL><DEDENT>for fname in removed:<EOL><INDENT>receiver.remove(fname)<EOL><DEDENT>same = currentFiles & files<EOL>for fname in same:<EOL><INDENT>newContents = path.child(fname).getContent()<EOL>oldContents = filesContents[fname]<EOL>if newContents == oldContents:<EOL><INDENT>continue<EOL><DEDENT>receiver.remove(fname)<EOL>filesContents[fname] = newContents<EOL>receiver.add(fname, newContents)<EOL><DEDENT>files.clear()<EOL>files.update(currentFiles)<EOL><DEDENT>return functools.partial(_check, path)<EOL>",
+                "docstring": "Construct a function that checks a directory for process configuration\n\n    The function checks for additions or removals\n    of JSON process configuration files and calls the appropriate receiver\n    methods.\n\n    :param location: string, the directory to monitor\n    :param receiver: IEventReceiver\n    :returns: a function with no parameters",
+                "id": "f145:m0"
+            },
+            "truncated_cells": []
+        },
+        {
+            "row_idx": 80,
+            "row": {
+                "signature": "def messages(location, receiver):",
+                "body": "path = filepath.FilePath(location)<EOL>def _check(path):<EOL><INDENT>messageFiles = path.globChildren('<STR_LIT:*>')<EOL>for message in messageFiles:<EOL><INDENT>if message.basename().endswith('<STR_LIT>'):<EOL><INDENT>continue<EOL><DEDENT>receiver.message(message.getContent())<EOL>message.remove()<EOL><DEDENT><DEDENT>return functools.partial(_check, path)<EOL>",
+                "docstring": "Construct a function that checks a directory for messages\n\n    The function checks for new messages and\n    calls the appropriate method on the receiver. Sent messages are\n    deleted.\n\n    :param location: string, the directory to monitor\n    :param receiver: IEventReceiver\n    :returns: a function with no parameters",
+                "id": "f145:m1"
+            },
+            "truncated_cells": []
+        },
+        {
+            "row_idx": 81,
+            "row": {
+                "signature": "def check(self):",
+                "body": "if self.closed:<EOL><INDENT>raise ValueError(\"<STR_LIT>\")<EOL><DEDENT>self._maybeReset()<EOL>if self.url is None:<EOL><INDENT>return False<EOL><DEDENT>return self._maybeCheck()<EOL>",
+                "docstring": "Check the state of HTTP",
+                "id": "f146:c1:m4"
+            },
+            "truncated_cells": []
+        },
+        {
+            "row_idx": 82,
+            "row": {
+                "signature": "def markBad(self, dummyValue):",
+                "body": "self.bad += <NUM_LIT:1><EOL>",
+                "docstring": "Note an unsuccessful check",
+                "id": "f146:c0:m2"
+            },
+            "truncated_cells": []
+        },
+        {
+            "row_idx": 83,
+            "row": {
+                "signature": "def markGood(self, dummyValue):",
+                "body": "self.bad = <NUM_LIT:0><EOL>",
+                "docstring": "Note a successful check",
+                "id": "f146:c0:m3"
+            },
+            "truncated_cells": []
+        },
+        {
+            "row_idx": 84,
+            "row": {
+                "signature": "def makeService(opt):",
+                "body": "restarter, path = beatcheck.parseConfig(opt)<EOL>pool = client.HTTPConnectionPool(reactor)<EOL>agent = client.Agent(reactor=reactor, pool=pool)<EOL>settings = Settings(reactor=reactor, agent=agent)<EOL>states = {}<EOL>checker = functools.partial(check, settings, states, path)<EOL>httpcheck = tainternet.TimerService(opt['<STR_LIT>'], run, restarter, checker)<EOL>httpcheck.setName('<STR_LIT>')<EOL>return heart.wrapHeart(httpcheck)<EOL>",
+                "docstring": "Make a service\n\n    :params opt: dictionary-like object with 'freq', 'config' and 'messages'\n    :returns: twisted.application.internet.TimerService that at opt['freq']\n              checks for stale processes in opt['config'], and sends\n              restart messages through opt['messages']",
+                "id": "f146:m2"
+            },
+            "truncated_cells": []
+        },
+        {
+            "row_idx": 85,
+            "row": {
+                "signature": "def run(restarter, checker):",
+                "body": "for bad in checker():<EOL><INDENT>restarter(bad)<EOL><DEDENT>",
+                "docstring": "Run restarter on the checker's output\n\n    :params restarter: something to run on the output of the checker\n    :params checker: a function expected to get one argument (current time)\n                     and return a list of stale names\n    :params timer: a function of zero arguments, intended to return current\n                   time\n    :returns: None",
+                "id": "f146:m1"
+            },
+            "truncated_cells": []
+        },
+        {
+            "row_idx": 86,
+            "row": {
+                "signature": "def runProcess(args, timeout, grace, reactor):",
+                "body": "deferred = defer.Deferred()<EOL>protocol = ProcessProtocol(deferred)<EOL>process = reactor.spawnProcess(protocol, args[<NUM_LIT:0>], args, env=os.environ)<EOL>def _logEnded(err):<EOL><INDENT>err.trap(tierror.ProcessDone, tierror.ProcessTerminated)<EOL>print(err.value)<EOL><DEDENT>deferred.addErrback(_logEnded)<EOL>def _cancelTermination(dummy):<EOL><INDENT>for termination in terminations:<EOL><INDENT>if termination.active():<EOL><INDENT>termination.cancel()<EOL><DEDENT><DEDENT><DEDENT>deferred.addCallback(_cancelTermination)<EOL>terminations = []<EOL>terminations.append(reactor.callLater(timeout, process.signalProcess,<EOL>\"<STR_LIT>\"))<EOL>terminations.append(reactor.callLater(timeout+grace,<EOL>process.signalProcess, \"<STR_LIT>\"))<EOL>return deferred<EOL>",
+                "docstring": "Run a process, return a deferred that fires when it is done\n\n    :params args: Process arguments\n    :params timeout: Time before terminating process\n    :params grace: Time before killing process after terminating it\n    :params reactor: IReactorProcess and IReactorTime\n    :returns: deferred that fires with success when the process ends,\n              or fails if there was a problem spawning/terminating\n              the process",
+                "id": "f148:m0"
+            },
+            "truncated_cells": []
+        },
+        {
+            "row_idx": 87,
+            "row": {
+                "signature": "def processExited(self, reason):",
+                "body": "pass<EOL>",
+                "docstring": "Ignore processExited",
+                "id": "f148:c0:m3"
+            },
+            "truncated_cells": []
+        },
+        {
+            "row_idx": 88,
+            "row": {
+                "signature": "def childConnectionLost(self, reason):",
+                "body": "pass<EOL>",
+                "docstring": "Ignore childConnectionLoss",
+                "id": "f148:c0:m4"
+            },
+            "truncated_cells": []
+        },
+        {
+            "row_idx": 89,
+            "row": {
+                "signature": "def replaceEnvironment(case, myEnv=None):",
+                "body": "if myEnv is None:<EOL><INDENT>myEnv = buildEnv()<EOL><DEDENT>oldEnviron = os.environ<EOL>def _cleanup():<EOL><INDENT>os.environ = oldEnviron<EOL><DEDENT>case.addCleanup(_cleanup)<EOL>os.environ = myEnv<EOL>",
+                "docstring": "Replace environment temporarily, restoring it at end of test\n\n    :params myEnv: a dict-like object",
+                "id": "f149:m0"
+            },
+            "truncated_cells": []
+        },
+        {
+            "row_idx": 90,
+            "row": {
+                "signature": "def maybeAddHeart(master):",
+                "body": "heartSer = makeService()<EOL>if heartSer is None:<EOL><INDENT>return<EOL><DEDENT>heartSer.setName('<STR_LIT>')<EOL>heartSer.setServiceParent(master)<EOL>",
+                "docstring": "Add a heart to a service collection\n\n    Add a heart to a service.IServiceCollector if\n    the heart is not None.\n\n    :params master: a service.IServiceCollector",
+                "id": "f151:m1"
+            },
+            "truncated_cells": []
+        },
+        {
+            "row_idx": 91,
+            "row": {
+                "signature": "def message(self, contents):",
+                "body": "contents = json.loads(contents.decode('<STR_LIT:utf-8>'))<EOL>tp = contents['<STR_LIT:type>']<EOL>if tp == '<STR_LIT>':<EOL><INDENT>self.monitor.stopProcess(contents['<STR_LIT:name>'])<EOL>log.msg(\"<STR_LIT>\", contents['<STR_LIT:name>'])<EOL><DEDENT>elif tp == '<STR_LIT>':<EOL><INDENT>self.monitor.restartAll()<EOL>log.msg(\"<STR_LIT>\")<EOL><DEDENT>elif tp == '<STR_LIT>':<EOL><INDENT>log.msg(\"<STR_LIT>\", contents['<STR_LIT>'])<EOL>for name in self._groupToProcess[contents['<STR_LIT>']]:<EOL><INDENT>log.msg(\"<STR_LIT>\", name)<EOL>self.monitor.stopProcess(name)<EOL><DEDENT><DEDENT>else:<EOL><INDENT>raise ValueError('<STR_LIT>', contents)<EOL><DEDENT>",
+                "docstring": "Respond to a restart or a restart-all message\n\n        :params contents: string, contents of message\n           parsed as JSON, and assumed to have a 'type'\n           key, with value either 'restart' or 'restart-all'.\n           If the value is 'restart', another key\n           ('value') should exist with a logical process\n           name.",
+                "id": "f157:c0:m3"
+            },
+            "truncated_cells": []
+        },
+        {
+            "row_idx": 92,
+            "row": {
+                "signature": "def remove(self, name):",
+                "body": "self.monitor.removeProcess(name)<EOL>log.msg(\"<STR_LIT>\", name)<EOL>for group in self._processToGroups.pop(name):<EOL><INDENT>self._groupToProcess[group].remove(name)<EOL><DEDENT>",
+                "docstring": "Remove a process\n\n        :params name: string, name of process",
+                "id": "f157:c0:m2"
+            },
+            "truncated_cells": []
+        },
+        {
+            "row_idx": 93,
+            "row": {
+                "signature": "@mainlib.COMMANDS.register(name='<STR_LIT>')<EOL>def main(argv):",
+                "body": "ns = PARSER.parse_args(argv[<NUM_LIT:1>:])<EOL>call(ns)<EOL>",
+                "docstring": "command-line entry point\n\n        --messages: messages directory\n\n        --config: configuration directory\n\n    subcommands:\n        add:\n            name (positional)\n\n            --cmd (required) -- executable\n\n            --arg -- add an argument\n\n            --env -- add an environment variable (VAR=value)\n\n            --uid -- set uid\n\n            --gid -- set gid\n\n            --extras -- a JSON file with more parameters\n\n            --env-inherit -- add an environment variable to inherit\n\n        remove:\n            name (positional)\n        restart:\n            name (positional)\n        restart-all:\n            no arguments",
+                "id": "f158:m8"
+            },
+            "truncated_cells": []
+        },
+        {
+            "row_idx": 94,
+            "row": {
+                "signature": "def restart(places, name):",
+                "body": "content = _dumps(dict(type='<STR_LIT>', name=name))<EOL>_addMessage(places, content)<EOL>",
+                "docstring": "Restart a process\n\n    :params places: a Places instance\n    :params name: string, the logical name of the process\n    :returns: None",
+                "id": "f158:m4"
+            },
+            "truncated_cells": []
+        },
+        {
+            "row_idx": 95,
+            "row": {
+                "signature": "def makeService(opt):",
+                "body": "restarter, path = parseConfig(opt)<EOL>now = time.time()<EOL>checker = functools.partial(check, path, now)<EOL>beatcheck = tainternet.TimerService(opt['<STR_LIT>'], run, restarter,<EOL>checker, time.time)<EOL>beatcheck.setName('<STR_LIT>')<EOL>return heart.wrapHeart(beatcheck)<EOL>",
+                "docstring": "Make a service\n\n    :params opt: dictionary-like object with 'freq', 'config' and 'messages'\n    :returns: twisted.application.internet.TimerService that at opt['freq']\n              checks for stale processes in opt['config'], and sends\n              restart messages through opt['messages']",
+                "id": "f159:m4"
+            },
+            "truncated_cells": []
+        },
+        {
+            "row_idx": 96,
+            "row": {
+                "signature": "def run(restarter, checker, timer):",
+                "body": "for bad in checker(timer()):<EOL><INDENT>restarter(bad)<EOL><DEDENT>",
+                "docstring": "Run restarter on the checker's output\n\n    :params restarter: something to run on the output of the checker\n    :params checker: a function expected to get one argument (current time)\n                     and return a list of stale names\n    :params timer: a function of zero arguments, intended to return current\n                   time\n    :returns: None",
+                "id": "f159:m2"
+            },
+            "truncated_cells": []
+        },
+        {
+            "row_idx": 97,
+            "row": {
+                "signature": "def parseConfig(opt):",
+                "body": "places = ctllib.Places(config=opt['<STR_LIT>'], messages=opt['<STR_LIT>'])<EOL>restarter = functools.partial(ctllib.restart, places)<EOL>path = filepath.FilePath(opt['<STR_LIT>'])<EOL>return restarter, path<EOL>",
+                "docstring": "Parse configuration\n\n    :params opt: dict-like object with config and messages keys\n    :returns: restarter, path",
+                "id": "f159:m3"
+            },
+            "truncated_cells": []
+        },
+        {
+            "row_idx": 98,
+            "row": {
+                "signature": "def hash_eth2(data: Union[bytes, bytearray]) -> Hash32:",
+                "body": "return Hash32(keccak(data))<EOL>",
+                "docstring": "Return Keccak-256 hashed result.\nNote: it's a placeholder and we aim to migrate to a S[T/N]ARK-friendly hash function in\na future Ethereum 2.0 deployment phase.",
+                "id": "f178:m0"
+            },
+            "truncated_cells": []
+        },
+        {
+            "row_idx": 99,
+            "row": {
+                "signature": "def create_access_request(pid_value, users, confirmed):",
+                "body": "datastore = current_app.extensions['<STR_LIT>'].datastore<EOL>receiver = datastore.get_user(users['<STR_LIT>']['<STR_LIT:id>'])<EOL>sender = datastore.get_user(users['<STR_LIT>']['<STR_LIT:id>'])<EOL>return AccessRequest.create(<EOL>recid=pid_value,<EOL>receiver=receiver,<EOL>sender_full_name=\"<STR_LIT>\",<EOL>sender_email=\"<STR_LIT>\",<EOL>sender=sender if confirmed else None,<EOL>justification=\"<STR_LIT>\",<EOL>)<EOL>",
+                "docstring": "Access Request.",
+                "id": "f200:m0"
+            },
+            "truncated_cells": []
+        }
+    ],
+    "truncated": true
+}

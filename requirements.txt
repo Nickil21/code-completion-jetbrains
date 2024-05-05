@@ -1,0 +1,11 @@
+pandas==2.2.2
+transformers==4.40.1
+bitsandbytes==0.43.1
+accelerate==0.29.3
+fuzzywuzzy==0.18.0
+python-Levenshtein==0.25.1
+datasets==2.19.0
+peft==0.10.0
+wandb==0.16.6
+kaggle==1.6.12
+nltk==3.8.1
